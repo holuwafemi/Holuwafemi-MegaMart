@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Holuwafemi Mega Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230F1F3D%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23C9A227%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module">
+  window.__firebaseConfig = {
+    apiKey: "AIzaSyAki4kee2ujELjqiuve5JJ54-TJpEyhLBA",
+    authDomain: "megamart-ea7e4.firebaseapp.com",
+    projectId: "megamart-ea7e4",
+    storageBucket: "megamart-ea7e4.firebasestorage.app",
+    messagingSenderId: "240320003683",
+    appId: "1:240320003683:web:3564de55951b387a008256",
+    measurementId: "G-8L2ZFC8EQF"
+  };
+</script>
+<script type="module" src="site-auth.js"></script>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span><a href="#" onclick="openSellModal();return false;" style="color:inherit;text-decoration:underline;">Sell on Holuwafemi</a> &nbsp;|&nbsp; <a href="track-order.html" style="color:inherit;text-decoration:underline;">Track Order</a> &nbsp;|&nbsp; Help</span>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">Holuwafemi<span>.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <a href="login.html" class="item" id="accountLink"><span class="icon">👤</span>Account</a>
+      <a href="cart.html" class="item"><span class="icon">🛒</span>Cart<span class="cart-count">3</span></a>
+    </div>
+  </div>
+  <nav class="catnav">
+    <div class="catnav-inner">
+      <a href="shop.html?cat=electronics">Electronics</a>
+      <a href="shop.html?cat=solar">Solar & Power</a>
+      <a href="shop.html?cat=appliances">Home Appliances</a>
+      <a href="shop.html?cat=computers">Computers</a>
+      <a href="shop.html?cat=phones">Phones & Tablets</a>
+      <a href="shop.html?cat=fashion">Fashion</a>
+      <a href="index.html#flashsale">Flash Sales</a>
+      <a href="index.html#select">Holuwafemi Select</a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><a href="cart.html">Cart</a><span class="sep">/</span><span class="current">Checkout</span></div>
+  <h1 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:20px;">Checkout</h1>
+
+  <div class="checkout-layout">
+    <div>
+      <div class="co-section">
+        <h3><span class="step-num">1</span> Delivery Details</h3>
+        <div class="form-row">
+          <div class="form-field"><label>Full Name</label><input type="text" id="coName" placeholder="e.g. Oluwafemi Adeyemi"></div>
+          <div class="form-field"><label>Phone Number</label><input type="text" id="coPhone" placeholder="080XXXXXXXX"></div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Email (for payment receipt)</label><input type="email" id="coEmail" placeholder="you@example.com"></div>
+        <div class="form-field" style="margin-bottom:14px;"><label>Delivery Address</label><input type="text" id="coAddress" placeholder="Street address, area"></div>
+        <div class="form-row">
+          <div class="form-field"><label>State</label>
+            <select id="coState"><option>Lagos</option><option>Oyo</option><option>FCT — Abuja</option><option>Rivers</option><option>Other</option></select>
+          </div>
+          <div class="form-field"><label>City</label><input type="text" id="coCity" placeholder="e.g. Ikeja"></div>
+        </div>
+      </div>
+
+      <div class="co-section">
+        <h3><span class="step-num">2</span> Payment Method</h3>
+        <div class="pay-options">
+          <label class="pay-option selected"><input type="radio" name="pay" checked> Pay with Card / Transfer (Paystack) — instant confirmation</label>
+          <label class="pay-option"><input type="radio" name="pay"> Pay on Delivery — available in select areas</label>
+        </div>
+      </div>
+
+      <div class="co-section">
+        <h3><span class="step-num">3</span> Order Notes (optional)</h3>
+        <div class="form-field"><textarea rows="3" placeholder="Delivery instructions, landmark, preferred time..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="co-summary">
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>1000VA Solar Inverter Combo</span><span>₦185,000</span></div>
+        <div class="summary-row"><span>Tecno Spark 20</span><span>₦148,500</span></div>
+        <div class="summary-row"><span>Leather Laptop Bag</span><span>₦34,500</span></div>
+        <div class="summary-row"><span>Delivery</span><span>₦3,500</span></div>
+        <div class="summary-row total"><span>Total</span><span>₦371,500</span></div>
+        <button class="co-place-btn" onclick="placeOrder()">Place Order</button>
+        <div class="secure-note">🔒 Payments secured by Paystack</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Solar & Power</a>
+      <a href="#">Phones & Tablets</a>
+      <a href="#">Home Appliances</a>
+      <a href="#">Fashion</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Returns Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="#">Contact via WhatsApp</a>
+    </div>
+    <div>
+      <h4>About Holuwafemi</h4>
+      <a href="#">Our Story</a>
+      <a href="#" onclick="openSellModal();return false;">Sell on Holuwafemi</a>
+      <a href="#">Careers</a>
+    </div>
+    <div>
+      <h4>Payment</h4>
+      <a href="#">Paystack Secure Checkout</a>
+      <a href="#">Pay on Delivery</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Holuwafemi Mega Store. All rights reserved.</span>
+    <span>Made in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>Want to sell on Holuwafemi?</h3>
+    <p>Tell us a bit about your business. Our team will chat with you first to review your products — seller access is set up individually after that, it isn't shared automatically.</p>
+    <label>Business / Seller name</label>
+    <input type="text" placeholder="e.g. Adeyemi Electronics">
+    <label>What do you sell?</label>
+    <select>
+      <option>Electronics</option>
+      <option>Solar & Power</option>
+      <option>Home Appliances</option>
+      <option>Computers</option>
+      <option>Phones & Tablets</option>
+      <option>Fashion</option>
+      <option>Other</option>
+    </select>
+    <label>WhatsApp number</label>
+    <input type="text" placeholder="e.g. 080XXXXXXXX">
+    <label>Message (optional)</label>
+    <textarea placeholder="Tell us more about your products, stock, delivery location..."></textarea>
+    <div class="field-error" id="sellFormError"></div>
+    <button class="submit-btn" onclick="startSellerChat()">Start chat with our team</button>
+    <div class="note">This opens a conversation on WhatsApp — no account access is shared here.</div>
+  </div>
+</div>
+
+<script>
+  function openSellModal(){ document.getElementById('sellModal').classList.add('open'); }
+  function closeSellModal(){ document.getElementById('sellModal').classList.remove('open'); }
+  function startSellerChat(){
+    const name = document.querySelector('.modal input[placeholder^="e.g. Adeyemi"]').value.trim();
+    const category = document.querySelector('.modal select').value;
+    const phone = document.querySelector('.modal input[placeholder^="e.g. 080"]').value.trim();
+    const message = document.querySelector('.modal textarea').value.trim();
+    const err = document.getElementById('sellFormError');
+
+    if (!name || !phone) {
+      err.style.display = 'block';
+      err.textContent = 'Please add your business name and WhatsApp number so our team can reach you.';
+      return;
+    }
+    err.style.display = 'none';
+
+    let text = `Hi, I'd like to sell on Holuwafemi Mega Store.\nBusiness: ${name}\nCategory: ${category}\nMy WhatsApp: ${phone}\n${message ? 'Message: ' + message : ''}`;
+    const sellerSupportNumber = '2349159740200';
+    const url = `https://wa.me/${sellerSupportNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    closeSellModal();
+  }
+
+  // Search: in production this queries Firestore; here it routes to the shop page
+  function doSearch(){
+    const term = document.getElementById('searchInput').value.trim();
+    window.location.href = 'shop.html' + (term ? ('?q=' + encodeURIComponent(term)) : '');
+  }
+</script>
+
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+
+  document.querySelectorAll('.pay-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  // ⚠️ Replace with your real Paystack PUBLIC key (starts with pk_) — safe to expose
+  // client-side. NEVER put your secret key (sk_...) here — keep it only in your
+  // Firebase Cloud Function / Secrets Manager, same as your refund flow.
+  const PAYSTACK_PUBLIC_KEY = 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475';
+  const ORDER_TOTAL_NAIRA = 371500; // ⚠️ demo total — real checkout should compute this from actual cart contents
+  const ORDER_TOTAL_KOBO = ORDER_TOTAL_NAIRA * 100;
+
+  function isConfigured(){
+    return window.__firebaseConfig && window.__firebaseConfig.apiKey !== "REPLACE_ME";
+  }
+
+  window.placeOrder = async function placeOrder(){
+    const payMethod = document.querySelector('input[name="pay"]:checked');
+    const isPayOnDelivery = payMethod && payMethod.closest('.pay-option').textContent.includes('Pay on Delivery');
+    const email = document.getElementById('coEmail').value.trim()
+                  || prompt('Enter your email for the payment receipt:');
+
+    const btn = document.querySelector('.co-place-btn');
+
+    const orderData = {
+      total: ORDER_TOTAL_NAIRA,
+      email: email || null,
+      name: document.getElementById('coName').value.trim() || null,
+      phone: document.getElementById('coPhone').value.trim() || null,
+      address: document.getElementById('coAddress').value.trim() || null,
+      city: document.getElementById('coCity').value.trim() || null,
+      state: document.getElementById('coState').value || null,
+      paymentMethod: isPayOnDelivery ? 'pay_on_delivery' : 'paystack',
+      status: isPayOnDelivery ? 'confirmed' : 'pending_payment',
+      userId: (window.__currentUser && window.__currentUser.uid) || null,
+      createdAt: serverTimestamp()
+    };
+
+    let orderRef = null;
+    if (isConfigured()) {
+      try {
+        const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+        const db = getFirestore(app);
+        orderRef = await addDoc(collection(db, 'orders'), orderData);
+      } catch (err) {
+        console.error('Could not create order:', err);
+        alert('Something went wrong creating your order. Please try again.');
+        return;
+      }
+    }
+
+    if (isPayOnDelivery) {
+      window.location = 'order-confirmation.html' + (orderRef ? ('?order=' + orderRef.id) : '');
+      return;
+    }
+
+    if (!email) { alert('An email is required for card/transfer payment.'); return; }
+
+    const handler = PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: email,
+      amount: ORDER_TOTAL_KOBO,
+      currency: 'NGN',
+      ref: 'HMS-' + Date.now(),
+      callback: async function(response){
+        // CRITICAL: response.reference from this callback is NOT proof of payment on
+        // its own — a user could fake this in devtools. It must be verified server-side
+        // (Firebase Callable Function calling Paystack's /transaction/verify endpoint
+        // with your secret key) before the order counts as paid. That's what this does:
+        if (btn) { btn.disabled = true; btn.textContent = 'Verifying payment…'; }
+
+        if (isConfigured() && orderRef) {
+          try {
+            const app = getApps()[0];
+            const functions = getFunctions(app);
+            const verifyPayment = httpsCallable(functions, 'verifyPayment');
+            await verifyPayment({ reference: response.reference, orderId: orderRef.id });
+          } catch (err) {
+            console.error('Payment verification failed:', err);
+            alert('We received your payment reference but could not verify it automatically. Our team will confirm manually — please keep your reference: ' + response.reference);
+          }
+        }
+
+        window.location = 'order-confirmation.html?ref=' + response.reference + (orderRef ? ('&order=' + orderRef.id) : '');
+      },
+      onClose: function(){
+        console.log('Payment window closed without completing payment');
+      }
+    });
+    handler.openIframe();
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — Holuwafemi Mega Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230F1F3D%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23C9A227%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module">
+  window.__firebaseConfig = {
+    apiKey: "AIzaSyAki4kee2ujELjqiuve5JJ54-TJpEyhLBA",
+    authDomain: "megamart-ea7e4.firebaseapp.com",
+    projectId: "megamart-ea7e4",
+    storageBucket: "megamart-ea7e4.firebasestorage.app",
+    messagingSenderId: "240320003683",
+    appId: "1:240320003683:web:3564de55951b387a008256",
+    measurementId: "G-8L2ZFC8EQF"
+  };
+</script>
+<script type="module" src="site-auth.js"></script>
+
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span><a href="#" onclick="openSellModal();return false;" style="color:inherit;text-decoration:underline;">Sell on Holuwafemi</a> &nbsp;|&nbsp; <a href="track-order.html" style="color:inherit;text-decoration:underline;">Track Order</a> &nbsp;|&nbsp; Help</span>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">Holuwafemi<span>.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <a href="login.html" class="item" id="accountLink"><span class="icon">👤</span>Account</a>
+      <a href="cart.html" class="item"><span class="icon">🛒</span>Cart<span class="cart-count">3</span></a>
+    </div>
+  </div>
+  <nav class="catnav">
+    <div class="catnav-inner">
+      <a href="shop.html?cat=electronics">Electronics</a>
+      <a href="shop.html?cat=solar">Solar & Power</a>
+      <a href="shop.html?cat=appliances">Home Appliances</a>
+      <a href="shop.html?cat=computers">Computers</a>
+      <a href="shop.html?cat=phones">Phones & Tablets</a>
+      <a href="shop.html?cat=fashion">Fashion</a>
+      <a href="index.html#flashsale">Flash Sales</a>
+      <a href="index.html#select">Holuwafemi Select</a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div class="confirm-wrap">
+    <div class="confirm-icon">✓</div>
+    <h1>Order Placed Successfully!</h1>
+    <p>Thanks for shopping with Holuwafemi Mega Store. A confirmation has been sent to your phone number, and we'll notify you as your order ships.</p>
+    <div class="confirm-box">
+      <div class="row"><span>Order Number</span><span><strong id="ocOrderNum">#HMS-28471</strong></span></div>
+      <div class="row"><span>Estimated Delivery</span><span>2–4 business days</span></div>
+      <div class="row"><span>Payment Method</span><span id="ocPayMethod">Paystack (Card)</span></div>
+      <div class="row"><span>Total Paid</span><span><strong id="ocTotal">₦371,500</strong></span></div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <a href="index.html" class="btn-secondary" style="flex:none;padding:13px 24px;">Continue Shopping</a>
+      <a href="track-order.html" id="ocTrackLink" class="btn-primary" style="flex:none;padding:13px 24px;">Track Order</a>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('order');
+
+  if (orderId) {
+    document.getElementById('ocOrderNum').textContent = '#' + orderId.slice(-8).toUpperCase();
+    document.getElementById('ocTrackLink').href = 'track-order.html?order=' + orderId;
+
+    if (window.__firebaseConfig && window.__firebaseConfig.apiKey !== "REPLACE_ME") {
+      const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+      const db = getFirestore(app);
+      getDoc(doc(db, 'orders', orderId)).then(snap => {
+        if (!snap.exists()) return;
+        const o = snap.data();
+        document.getElementById('ocTotal').textContent = '₦' + Number(o.total).toLocaleString('en-NG');
+        document.getElementById('ocPayMethod').textContent = o.paymentMethod === 'pay_on_delivery' ? 'Pay on Delivery' : 'Paystack (Card)';
+      }).catch(err => console.error('Could not load order:', err));
+    }
+  }
+</script>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Solar & Power</a>
+      <a href="#">Phones & Tablets</a>
+      <a href="#">Home Appliances</a>
+      <a href="#">Fashion</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Returns Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="#">Contact via WhatsApp</a>
+    </div>
+    <div>
+      <h4>About Holuwafemi</h4>
+      <a href="#">Our Story</a>
+      <a href="#" onclick="openSellModal();return false;">Sell on Holuwafemi</a>
+      <a href="#">Careers</a>
+    </div>
+    <div>
+      <h4>Payment</h4>
+      <a href="#">Paystack Secure Checkout</a>
+      <a href="#">Pay on Delivery</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Holuwafemi Mega Store. All rights reserved.</span>
+    <span>Made in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>Want to sell on Holuwafemi?</h3>
+    <p>Tell us a bit about your business. Our team will chat with you first to review your products — seller access is set up individually after that, it isn't shared automatically.</p>
+    <label>Business / Seller name</label>
+    <input type="text" placeholder="e.g. Adeyemi Electronics">
+    <label>What do you sell?</label>
+    <select>
+      <option>Electronics</option>
+      <option>Solar & Power</option>
+      <option>Home Appliances</option>
+      <option>Computers</option>
+      <option>Phones & Tablets</option>
+      <option>Fashion</option>
+      <option>Other</option>
+    </select>
+    <label>WhatsApp number</label>
+    <input type="text" placeholder="e.g. 080XXXXXXXX">
+    <label>Message (optional)</label>
+    <textarea placeholder="Tell us more about your products, stock, delivery location..."></textarea>
+    <div class="field-error" id="sellFormError"></div>
+    <button class="submit-btn" onclick="startSellerChat()">Start chat with our team</button>
+    <div class="note">This opens a conversation on WhatsApp — no account access is shared here.</div>
+  </div>
+</div>
+
+<script>
+  function openSellModal(){ document.getElementById('sellModal').classList.add('open'); }
+  function closeSellModal(){ document.getElementById('sellModal').classList.remove('open'); }
+  function startSellerChat(){
+    const name = document.querySelector('.modal input[placeholder^="e.g. Adeyemi"]').value.trim();
+    const category = document.querySelector('.modal select').value;
+    const phone = document.querySelector('.modal input[placeholder^="e.g. 080"]').value.trim();
+    const message = document.querySelector('.modal textarea').value.trim();
+    const err = document.getElementById('sellFormError');
+
+    if (!name || !phone) {
+      err.style.display = 'block';
+      err.textContent = 'Please add your business name and WhatsApp number so our team can reach you.';
+      return;
+    }
+    err.style.display = 'none';
+
+    let text = `Hi, I'd like to sell on Holuwafemi Mega Store.\nBusiness: ${name}\nCategory: ${category}\nMy WhatsApp: ${phone}\n${message ? 'Message: ' + message : ''}`;
+    const sellerSupportNumber = '2349159740200';
+    const url = `https://wa.me/${sellerSupportNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    closeSellModal();
+  }
+
+  // Search: in production this queries Firestore; here it routes to the shop page
+  function doSearch(){
+    const term = document.getElementById('searchInput').value.trim();
+    window.location.href = 'shop.html' + (term ? ('?q=' + encodeURIComponent(term)) : '');
+  }
+</script>
+</body>
+</html>

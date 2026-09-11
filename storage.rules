@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Product photos are stored at: products/{sellerId}/{productId}/{fileName}
+    // A vendor can only ever write into their OWN sellerId folder —
+    // this is what stops one vendor from overwriting or uploading into
+    // another vendor's product folder even if they somehow guess the path.
+    match /products/{sellerId}/{allPaths=**} {
+      allow read: if true; // product photos are public on the storefront
+
+      allow write: if request.auth != null
+        && request.auth.uid == sellerId
+        && request.resource.size < 5 * 1024 * 1024   // 5MB max per photo
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

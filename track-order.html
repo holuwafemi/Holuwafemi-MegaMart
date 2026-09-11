@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Order — Holuwafemi Mega Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230F1F3D%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23C9A227%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module">
+  window.__firebaseConfig = {
+    apiKey: "AIzaSyAki4kee2ujELjqiuve5JJ54-TJpEyhLBA",
+    authDomain: "megamart-ea7e4.firebaseapp.com",
+    projectId: "megamart-ea7e4",
+    storageBucket: "megamart-ea7e4.firebasestorage.app",
+    messagingSenderId: "240320003683",
+    appId: "1:240320003683:web:3564de55951b387a008256",
+    measurementId: "G-8L2ZFC8EQF"
+  };
+</script>
+<script type="module" src="site-auth.js"></script>
+
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span><a href="#" onclick="openSellModal();return false;" style="color:inherit;text-decoration:underline;">Sell on Holuwafemi</a> &nbsp;|&nbsp; <a href="track-order.html" style="color:inherit;text-decoration:underline;">Track Order</a> &nbsp;|&nbsp; Help</span>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">Holuwafemi<span>.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <a href="login.html" class="item" id="accountLink"><span class="icon">👤</span>Account</a>
+      <a href="cart.html" class="item"><span class="icon">🛒</span>Cart<span class="cart-count">3</span></a>
+    </div>
+  </div>
+  <nav class="catnav">
+    <div class="catnav-inner">
+      <a href="shop.html?cat=electronics">Electronics</a>
+      <a href="shop.html?cat=solar">Solar & Power</a>
+      <a href="shop.html?cat=appliances">Home Appliances</a>
+      <a href="shop.html?cat=computers">Computers</a>
+      <a href="shop.html?cat=phones">Phones & Tablets</a>
+      <a href="shop.html?cat=fashion">Fashion</a>
+      <a href="index.html#flashsale">Flash Sales</a>
+      <a href="index.html#select">Holuwafemi Select</a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span class="current">Track Order</span></div>
+
+  <div class="auth-wrap" style="max-width:520px;">
+    <h1>Track Your Order</h1>
+    <div class="sub">Enter your order number and phone number to see delivery status</div>
+    <div class="form-field"><label>Order Number</label><input type="text" id="orderNumInput" placeholder="e.g. HMS-28471"></div>
+    <div class="form-field"><label>Phone Number Used at Checkout</label><input type="text" placeholder="080XXXXXXXX"></div>
+    <button class="auth-btn" onclick="lookupOrder()">Track Order</button>
+    <div id="orderResult" style="display:none;margin-top:24px;">
+      <div class="confirm-box">
+        <div class="row"><span>Order Number</span><span id="resOrderNum">—</span></div>
+        <div class="row"><span>Status</span><span style="color:var(--green);font-weight:700;">Out for Delivery</span></div>
+        <div class="row"><span>Placed On</span><span>Sep 9, 2026</span></div>
+        <div class="row"><span>Expected Delivery</span><span>Sep 11–13, 2026</span></div>
+        <div class="row"><span>Total</span><span><strong>₦371,500</strong></span></div>
+      </div>
+      <div style="font-size:12.5px;color:var(--ink-soft);text-align:center;">Questions about this order? <a href="#" onclick="openSellModal();return false;" style="color:var(--amber-dark);font-weight:600;">Chat with support</a></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Solar & Power</a>
+      <a href="#">Phones & Tablets</a>
+      <a href="#">Home Appliances</a>
+      <a href="#">Fashion</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Returns Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="#">Contact via WhatsApp</a>
+    </div>
+    <div>
+      <h4>About Holuwafemi</h4>
+      <a href="#">Our Story</a>
+      <a href="#" onclick="openSellModal();return false;">Sell on Holuwafemi</a>
+      <a href="#">Careers</a>
+    </div>
+    <div>
+      <h4>Payment</h4>
+      <a href="#">Paystack Secure Checkout</a>
+      <a href="#">Pay on Delivery</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Holuwafemi Mega Store. All rights reserved.</span>
+    <span>Made in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>Want to sell on Holuwafemi?</h3>
+    <p>Tell us a bit about your business. Our team will chat with you first to review your products — seller access is set up individually after that, it isn't shared automatically.</p>
+    <label>Business / Seller name</label>
+    <input type="text" placeholder="e.g. Adeyemi Electronics">
+    <label>What do you sell?</label>
+    <select>
+      <option>Electronics</option>
+      <option>Solar & Power</option>
+      <option>Home Appliances</option>
+      <option>Computers</option>
+      <option>Phones & Tablets</option>
+      <option>Fashion</option>
+      <option>Other</option>
+    </select>
+    <label>WhatsApp number</label>
+    <input type="text" placeholder="e.g. 080XXXXXXXX">
+    <label>Message (optional)</label>
+    <textarea placeholder="Tell us more about your products, stock, delivery location..."></textarea>
+    <div class="field-error" id="sellFormError"></div>
+    <button class="submit-btn" onclick="startSellerChat()">Start chat with our team</button>
+    <div class="note">This opens a conversation on WhatsApp — no account access is shared here.</div>
+  </div>
+</div>
+
+<script>
+  function openSellModal(){ document.getElementById('sellModal').classList.add('open'); }
+  function closeSellModal(){ document.getElementById('sellModal').classList.remove('open'); }
+  function startSellerChat(){
+    const name = document.querySelector('.modal input[placeholder^="e.g. Adeyemi"]').value.trim();
+    const category = document.querySelector('.modal select').value;
+    const phone = document.querySelector('.modal input[placeholder^="e.g. 080"]').value.trim();
+    const message = document.querySelector('.modal textarea').value.trim();
+    const err = document.getElementById('sellFormError');
+
+    if (!name || !phone) {
+      err.style.display = 'block';
+      err.textContent = 'Please add your business name and WhatsApp number so our team can reach you.';
+      return;
+    }
+    err.style.display = 'none';
+
+    let text = `Hi, I'd like to sell on Holuwafemi Mega Store.\nBusiness: ${name}\nCategory: ${category}\nMy WhatsApp: ${phone}\n${message ? 'Message: ' + message : ''}`;
+    const sellerSupportNumber = '2349159740200';
+    const url = `https://wa.me/${sellerSupportNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    closeSellModal();
+  }
+
+  // Search: in production this queries Firestore; here it routes to the shop page
+  function doSearch(){
+    const term = document.getElementById('searchInput').value.trim();
+    window.location.href = 'shop.html' + (term ? ('?q=' + encodeURIComponent(term)) : '');
+  }
+</script>
+
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const params = new URLSearchParams(window.location.search);
+  const preOrder = params.get('order');
+  if (preOrder) document.getElementById('orderNumInput').value = preOrder;
+
+  function isConfigured(){
+    return window.__firebaseConfig && window.__firebaseConfig.apiKey !== "REPLACE_ME";
+  }
+
+  const STATUS_LABELS = {
+    pending_payment: 'Awaiting Payment',
+    payment_failed: 'Payment Failed',
+    payment_mismatch: 'Payment Issue — Contact Support',
+    confirmed: 'Confirmed — Preparing for Delivery',
+    paid: 'Paid — Preparing for Delivery',
+    shipped: 'Out for Delivery',
+    delivered: 'Delivered'
+  };
+
+  window.lookupOrder = async function lookupOrder(){
+    const orderId = document.getElementById('orderNumInput').value.trim();
+    const phoneEntered = document.querySelector('.auth-wrap input[type="text"]:nth-of-type(2)')?.value.trim();
+    if (!orderId) { alert('Please enter your order number.'); return; }
+
+    if (!isConfigured()) {
+      // Demo fallback so the page still shows something before Firebase is connected.
+      document.getElementById('resOrderNum').textContent = orderId;
+      document.getElementById('orderResult').style.display = 'block';
+      return;
+    }
+
+    try {
+      const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+      const db = getFirestore(app);
+      const snap = await getDoc(doc(db, 'orders', orderId));
+
+      if (!snap.exists()) {
+        alert('No order found with that order number. Double check it and try again.');
+        return;
+      }
+      const o = snap.data();
+
+      // Basic verification — the phone used at checkout must match what's entered here,
+      // so someone can't look up an order just by guessing/incrementing an ID.
+      if (phoneEntered && o.phone && phoneEntered !== o.phone) {
+        alert('That phone number does not match this order.');
+        return;
+      }
+
+      document.getElementById('resOrderNum').textContent = '#' + orderId.slice(-8).toUpperCase();
+      document.querySelector('#orderResult .row:nth-child(2) span:last-child').textContent = STATUS_LABELS[o.status] || o.status;
+      document.querySelector('#orderResult .row:nth-child(4) span:last-child').textContent = '₦' + Number(o.total).toLocaleString('en-NG');
+      document.getElementById('orderResult').style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      alert('Could not look up that order right now. Please try again shortly.');
+    }
+  };
+
+  if (preOrder) lookupOrder();
+</script>
+</body>
+</html>

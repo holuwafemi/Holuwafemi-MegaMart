@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Holuwafemi Mega Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230F1F3D%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23C9A227%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module">
+  window.__firebaseConfig = {
+    apiKey: "AIzaSyAki4kee2ujELjqiuve5JJ54-TJpEyhLBA",
+    authDomain: "megamart-ea7e4.firebaseapp.com",
+    projectId: "megamart-ea7e4",
+    storageBucket: "megamart-ea7e4.firebasestorage.app",
+    messagingSenderId: "240320003683",
+    appId: "1:240320003683:web:3564de55951b387a008256",
+    measurementId: "G-8L2ZFC8EQF"
+  };
+</script>
+<script type="module" src="site-auth.js"></script>
+<script type="module" src="products-loader.js"></script>
+
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span><a href="#" onclick="openSellModal();return false;" style="color:inherit;text-decoration:underline;">Sell on Holuwafemi</a> &nbsp;|&nbsp; <a href="track-order.html" style="color:inherit;text-decoration:underline;">Track Order</a> &nbsp;|&nbsp; Help</span>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">Holuwafemi<span>.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <a href="login.html" class="item" id="accountLink"><span class="icon">👤</span>Account</a>
+      <a href="cart.html" class="item"><span class="icon">🛒</span>Cart<span class="cart-count">3</span></a>
+    </div>
+  </div>
+  <nav class="catnav">
+    <div class="catnav-inner">
+      <a href="shop.html?cat=electronics">Electronics</a>
+      <a href="shop.html?cat=solar">Solar & Power</a>
+      <a href="shop.html?cat=appliances">Home Appliances</a>
+      <a href="shop.html?cat=computers">Computers</a>
+      <a href="shop.html?cat=phones">Phones & Tablets</a>
+      <a href="shop.html?cat=fashion">Fashion</a>
+      <a href="index.html#flashsale">Flash Sales</a>
+      <a href="index.html#select">Holuwafemi Select</a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span class="current" id="catLabel">All Products</span></div>
+
+  <div class="shop-layout">
+    <aside class="filters">
+      <h4>Filters</h4>
+      <div class="filter-group">
+        <div class="fg-title">Category</div>
+        <label><input type="checkbox" checked> Electronics</label>
+        <label><input type="checkbox"> Solar & Power</label>
+        <label><input type="checkbox"> Home Appliances</label>
+        <label><input type="checkbox"> Computers</label>
+        <label><input type="checkbox"> Phones & Tablets</label>
+        <label><input type="checkbox"> Fashion</label>
+      </div>
+      <div class="filter-group">
+        <div class="fg-title">Price Range (₦)</div>
+        <div class="price-inputs">
+          <input type="text" placeholder="Min">
+          <span>—</span>
+          <input type="text" placeholder="Max">
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="fg-title">Brand</div>
+        <label><input type="checkbox"> LG</label>
+        <label><input type="checkbox"> Samsung</label>
+        <label><input type="checkbox"> Tecno</label>
+        <label><input type="checkbox"> HP</label>
+        <label><input type="checkbox"> JBL</label>
+      </div>
+      <div class="filter-group">
+        <div class="fg-title">Rating</div>
+        <label><input type="checkbox"> ⭐⭐⭐⭐ & up</label>
+        <label><input type="checkbox"> ⭐⭐⭐ & up</label>
+      </div>
+      <button class="apply-btn">Apply Filters</button>
+    </aside>
+
+    <div>
+      <div class="shop-toolbar">
+        <span class="count">Showing 1–12 of 84 results</span>
+        <select>
+          <option>Sort by: Popularity</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest</option>
+          <option>Top Rated</option>
+        </select>
+      </div>
+      <div class="shop-grid" data-product-grid="shop" data-limit="24" id="shopGrid">
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/solar-inv-2/400/400" alt="1000VA Solar Inverter + Battery Combo">
+        <div class="name">1000VA Solar Inverter + Battery Combo</div>
+        <div class="price-row"><span class="price">₦185,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/tecno-2/400/400" alt="Tecno Spark 20 — 8GB/128GB">
+        <div class="name">Tecno Spark 20 — 8GB/128GB</div>
+        <div class="price-row"><span class="price">₦148,500</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/lg-fridge-2/400/400" alt="LG 260L Double Door Refrigerator">
+        <div class="name">LG 260L Double Door Refrigerator</div>
+        <div class="price-row"><span class="price">₦412,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/hp-laptop-2/400/400" alt="HP EliteBook 840 — Core i5">
+        <div class="name">HP EliteBook 840 — Core i5</div>
+        <div class="price-row"><span class="price">₦295,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/ankara-2/400/400" alt="Ankara Print Kaftan — Men's">
+        <div class="name">Ankara Print Kaftan — Men's</div>
+        <div class="price-row"><span class="price">₦12,900</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/jbl-2/400/400" alt="JBL PartyBox 310 Speaker">
+        <div class="name">JBL PartyBox 310 Speaker</div>
+        <div class="price-row"><span class="price">₦265,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/canon-2/400/400" alt="Canon EOS 2000D DSLR Kit">
+        <div class="name">Canon EOS 2000D DSLR Kit</div>
+        <div class="price-row"><span class="price">₦398,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/watch-2/400/400" alt="Samsung Galaxy Watch 6">
+        <div class="name">Samsung Galaxy Watch 6</div>
+        <div class="price-row"><span class="price">₦210,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/monitor-2/400/400" alt="Dell UltraSharp 27" 4K Monitor">
+        <div class="name">Dell UltraSharp 27" 4K Monitor</div>
+        <div class="price-row"><span class="price">₦325,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/bag-2/400/400" alt="Leather Executive Laptop Bag">
+        <div class="name">Leather Executive Laptop Bag</div>
+        <div class="price-row"><span class="price">₦34,500</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/mtk-inv/400/400" alt="2000VA MTK Solar Inverter">
+        <div class="name">2000VA MTK Solar Inverter</div>
+        <div class="price-row"><span class="price">₦265,000</span></div>
+      </div>
+      <div class="pcard" onclick="window.location='product.html'" style="cursor:pointer">
+        <img loading="lazy" src="https://picsum.photos/seed/infinix-2/400/400" alt="Infinix Note 40 — 8GB/256GB">
+        <div class="name">Infinix Note 40 — 8GB/256GB</div>
+        <div class="price-row"><span class="price">₦175,000</span></div>
+      </div>
+      </div>
+      <div class="pagination">
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">7</a>
+        <a href="#">›</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Solar & Power</a>
+      <a href="#">Phones & Tablets</a>
+      <a href="#">Home Appliances</a>
+      <a href="#">Fashion</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Returns Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="#">Contact via WhatsApp</a>
+    </div>
+    <div>
+      <h4>About Holuwafemi</h4>
+      <a href="#">Our Story</a>
+      <a href="#" onclick="openSellModal();return false;">Sell on Holuwafemi</a>
+      <a href="#">Careers</a>
+    </div>
+    <div>
+      <h4>Payment</h4>
+      <a href="#">Paystack Secure Checkout</a>
+      <a href="#">Pay on Delivery</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Holuwafemi Mega Store. All rights reserved.</span>
+    <span>Made in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>Want to sell on Holuwafemi?</h3>
+    <p>Tell us a bit about your business. Our team will chat with you first to review your products — seller access is set up individually after that, it isn't shared automatically.</p>
+    <label>Business / Seller name</label>
+    <input type="text" placeholder="e.g. Adeyemi Electronics">
+    <label>What do you sell?</label>
+    <select>
+      <option>Electronics</option>
+      <option>Solar & Power</option>
+      <option>Home Appliances</option>
+      <option>Computers</option>
+      <option>Phones & Tablets</option>
+      <option>Fashion</option>
+      <option>Other</option>
+    </select>
+    <label>WhatsApp number</label>
+    <input type="text" placeholder="e.g. 080XXXXXXXX">
+    <label>Message (optional)</label>
+    <textarea placeholder="Tell us more about your products, stock, delivery location..."></textarea>
+    <div class="field-error" id="sellFormError"></div>
+    <button class="submit-btn" onclick="startSellerChat()">Start chat with our team</button>
+    <div class="note">This opens a conversation on WhatsApp — no account access is shared here.</div>
+  </div>
+</div>
+
+<script>
+  function openSellModal(){ document.getElementById('sellModal').classList.add('open'); }
+  function closeSellModal(){ document.getElementById('sellModal').classList.remove('open'); }
+  function startSellerChat(){
+    const name = document.querySelector('.modal input[placeholder^="e.g. Adeyemi"]').value.trim();
+    const category = document.querySelector('.modal select').value;
+    const phone = document.querySelector('.modal input[placeholder^="e.g. 080"]').value.trim();
+    const message = document.querySelector('.modal textarea').value.trim();
+    const err = document.getElementById('sellFormError');
+
+    if (!name || !phone) {
+      err.style.display = 'block';
+      err.textContent = 'Please add your business name and WhatsApp number so our team can reach you.';
+      return;
+    }
+    err.style.display = 'none';
+
+    let text = `Hi, I'd like to sell on Holuwafemi Mega Store.\nBusiness: ${name}\nCategory: ${category}\nMy WhatsApp: ${phone}\n${message ? 'Message: ' + message : ''}`;
+    const sellerSupportNumber = '2349159740200';
+    const url = `https://wa.me/${sellerSupportNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    closeSellModal();
+  }
+
+  // Search: in production this queries Firestore; here it routes to the shop page
+  function doSearch(){
+    const term = document.getElementById('searchInput').value.trim();
+    window.location.href = 'shop.html' + (term ? ('?q=' + encodeURIComponent(term)) : '');
+  }
+</script>
+
+<script>
+  // Reflect ?cat= param in breadcrumb (mock — real filtering happens server-side)
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  const q = params.get('q');
+  if (cat) {
+    const labels = {electronics:'Electronics', solar:'Solar & Power', appliances:'Home Appliances', computers:'Computers', phones:'Phones & Tablets', fashion:'Fashion', select:'Holuwafemi Select'};
+    document.getElementById('catLabel').textContent = labels[cat] || 'All Products';
+  } else if (q) {
+    document.getElementById('catLabel').textContent = 'Results for "' + q + '"';
+  }
+</script>
+</body>
+</html>

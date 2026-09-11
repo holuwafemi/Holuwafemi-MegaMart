@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────────
+    // CARTS (one doc per logged-in user, keyed by their uid)
+    // ─────────────────────────────────────────────
+    match /carts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ─────────────────────────────────────────────
+    // ORDERS
+    // ─────────────────────────────────────────────
+    match /orders/{orderId} {
+      // A logged-in customer can create an order tagged with their own uid,
+      // and read only their own orders. They can NEVER set status to "paid"
+      // themselves — that only happens via the verifyPayment Cloud Function,
+      // which runs with admin privileges and bypasses these rules entirely.
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status in ['pending_payment', 'confirmed'];
+
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+
+      // No client-side updates or deletes — status changes (paid, shipped, etc.)
+      // only happen via Cloud Functions / the admin dashboard.
+      allow update, delete: if false;
+    }
+
+    // ─────────────────────────────────────────────
+    // USERS (customer profiles — created on signup via login.js)
+    // ─────────────────────────────────────────────
+    match /users/{userId} {
+      // A user can read/write only their own profile.
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ─────────────────────────────────────────────
+    // SELLERS
+    // A seller doc is created manually by you (admin) after vetting,
+    // never by the person signing up themselves.
+    // ─────────────────────────────────────────────
+    match /sellers/{sellerId} {
+      // A seller can read their own record (to check their approval status,
+      // see their store name, etc.) — nothing else.
+      allow read: if request.auth != null && request.auth.uid == sellerId;
+
+      // Nobody creates/updates/deletes their own seller doc from the client.
+      // This only happens from the admin dashboard / a trusted Cloud Function
+      // running with admin privileges (which bypasses these rules entirely).
+      allow write: if false;
+    }
+
+    // ─────────────────────────────────────────────
+    // PRODUCTS
+    // ─────────────────────────────────────────────
+    match /products/{productId} {
+
+      // Public storefront (shop.html, homepage) can only ever see approved products.
+      allow read: if resource.data.status == 'approved';
+
+      // A seller can also read their OWN pending/rejected products
+      // (so their own dashboard can show "pending review").
+      allow read: if request.auth != null && request.auth.uid == resource.data.sellerId;
+
+      // ---- CREATE a new product ----
+      allow create: if request.auth != null
+        // must be an approved seller
+        && get(/databases/$(database)/documents/sellers/$(request.auth.uid)).data.status == 'approved'
+        // the product must be tagged as belonging to the person creating it —
+        // this is what stops someone from posting "as" another vendor
+        && request.resource.data.sellerId == request.auth.uid
+        // every new listing starts pending — a seller can never self-approve
+        && request.resource.data.status == 'pending'
+        // a vendor can NEVER set flash-sale fields on creation — admin only
+        && request.resource.data.isFlashSale == false
+        && (!('discountPercent' in request.resource.data) || request.resource.data.discountPercent == 0);
+
+      // ---- UPDATE an existing product ----
+      allow update: if request.auth != null && (
+        // Case 1: the seller updates their own product, but cannot touch
+        // status, sellerId, or any flash-sale field — only their own content fields.
+        (
+          request.auth.uid == resource.data.sellerId
+          && request.resource.data.sellerId == resource.data.sellerId
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.isFlashSale == resource.data.isFlashSale
+          && request.resource.data.discountPercent == resource.data.discountPercent
+        )
+        // Case 2: an admin account updates anything (approval, flash sale toggle, etc.)
+        // "admin" here means a custom claim you set via the Firebase Admin SDK —
+        // see the Cloud Function example below for how that gets set.
+        || request.auth.token.admin == true
+      );
+
+      allow delete: if request.auth != null && (
+        request.auth.uid == resource.data.sellerId || request.auth.token.admin == true
+      );
+    }
+  }
+}
