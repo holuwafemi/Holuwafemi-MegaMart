@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Holuwafemi Mega Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230F1F3D%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 fill=%22%23C9A227%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module">
+  window.__firebaseConfig = {
+    apiKey: "AIzaSyAki4kee2ujELjqiuve5JJ54-TJpEyhLBA",
+    authDomain: "megamart-ea7e4.firebaseapp.com",
+    projectId: "megamart-ea7e4",
+    storageBucket: "megamart-ea7e4.firebasestorage.app",
+    messagingSenderId: "240320003683",
+    appId: "1:240320003683:web:3564de55951b387a008256",
+    measurementId: "G-8L2ZFC8EQF"
+  };
+</script>
+<script type="module" src="site-auth.js"></script>
+<script type="module" src="admin.js"></script>
+<style>
+  .auth-checking{max-width:420px;margin:80px auto;text-align:center;font-size:14px;color:var(--ink-soft);}
+  .admin-section{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:22px;margin-bottom:24px;}
+  .admin-section h2{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+  .admin-section .sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;}
+  .review-row{
+    display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);
+  }
+  .review-row:last-child{border-bottom:none;}
+  .review-row img{width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg);}
+  .review-row .info{flex:1;min-width:0;}
+  .review-row .info .name{font-size:13.5px;font-weight:700;color:var(--ink);}
+  .review-row .info .meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .review-row .actions{display:flex;gap:8px;flex-shrink:0;}
+  .btn-approve{background:var(--green);color:#fff;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:5px;}
+  .btn-reject{background:var(--red);color:#fff;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:5px;}
+  .btn-flash{background:var(--amber);color:var(--navy);font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:5px;}
+  .empty-note{font-size:13px;color:var(--ink-soft);padding:20px 0;text-align:center;}
+  .seller-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .seller-form input, .seller-form select{
+    border:1px solid var(--line);border-radius:5px;padding:10px 12px;font-size:13.5px;font-family:'Inter',sans-serif;
+  }
+  .flash-inputs{display:flex;gap:8px;align-items:center;margin-right:8px;}
+  .flash-inputs input{width:60px;border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<div id="authChecking" class="auth-checking">Checking admin access…</div>
+
+<div id="pageContent" style="display:none">
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span><a href="#" onclick="openSellModal();return false;" style="color:inherit;text-decoration:underline;">Sell on Holuwafemi</a> &nbsp;|&nbsp; <a href="track-order.html" style="color:inherit;text-decoration:underline;">Track Order</a> &nbsp;|&nbsp; Help</span>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">Holuwafemi<span>.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <a href="login.html" class="item" id="accountLink"><span class="icon">👤</span>Account</a>
+      <a href="cart.html" class="item"><span class="icon">🛒</span>Cart<span class="cart-count">3</span></a>
+    </div>
+  </div>
+  <nav class="catnav">
+    <div class="catnav-inner">
+      <a href="shop.html?cat=electronics">Electronics</a>
+      <a href="shop.html?cat=solar">Solar & Power</a>
+      <a href="shop.html?cat=appliances">Home Appliances</a>
+      <a href="shop.html?cat=computers">Computers</a>
+      <a href="shop.html?cat=phones">Phones & Tablets</a>
+      <a href="shop.html?cat=fashion">Fashion</a>
+      <a href="index.html#flashsale">Flash Sales</a>
+      <a href="index.html#select">Holuwafemi Select</a>
+    </div>
+  </nav>
+</header>
+  <main>
+    <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span class="current">Admin Dashboard</span></div>
+    <h1 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:6px;">Admin Dashboard</h1>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:24px;" id="adminWelcome">Review pending products and approve sellers.</p>
+
+    <div class="admin-section">
+      <h2>Pending Products</h2>
+      <div class="sub">New vendor listings awaiting review before they go live on the storefront.</div>
+      <div id="pendingProductsList"><div class="empty-note">Loading…</div></div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Approved Products — Flash Sale Control</h2>
+      <div class="sub">Only you can flag a product as a flash sale with a discount. Vendors can never set this themselves.</div>
+      <div id="approvedProductsList"><div class="empty-note">Loading…</div></div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Approve a Seller</h2>
+      <div class="sub">After vetting someone on WhatsApp, find their Firebase Auth UID (Firebase Console → Authentication) and approve them here — this creates their seller record.</div>
+      <div class="seller-form">
+        <input type="text" id="sellerUidInput" placeholder="Seller's Firebase UID">
+        <input type="text" id="sellerNameInput" placeholder="Business name">
+        <select id="sellerCatInput">
+          <option>Electronics</option><option>Solar & Power</option><option>Home Appliances</option>
+          <option>Computers</option><option>Phones & Tablets</option><option>Fashion</option>
+        </select>
+        <button class="btn-approve" onclick="window.approveSellerNow()">Approve as Seller</button>
+      </div>
+      <div id="sellerApproveStatus" style="font-size:12.5px;margin-top:10px;"></div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Shop</h4>
+      <a href="#">Solar & Power</a>
+      <a href="#">Phones & Tablets</a>
+      <a href="#">Home Appliances</a>
+      <a href="#">Fashion</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Returns Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="#">Contact via WhatsApp</a>
+    </div>
+    <div>
+      <h4>About Holuwafemi</h4>
+      <a href="#">Our Story</a>
+      <a href="#" onclick="openSellModal();return false;">Sell on Holuwafemi</a>
+      <a href="#">Careers</a>
+    </div>
+    <div>
+      <h4>Payment</h4>
+      <a href="#">Paystack Secure Checkout</a>
+      <a href="#">Pay on Delivery</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Holuwafemi Mega Store. All rights reserved.</span>
+    <span>Made in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>Want to sell on Holuwafemi?</h3>
+    <p>Tell us a bit about your business. Our team will chat with you first to review your products — seller access is set up individually after that, it isn't shared automatically.</p>
+    <label>Business / Seller name</label>
+    <input type="text" placeholder="e.g. Adeyemi Electronics">
+    <label>What do you sell?</label>
+    <select>
+      <option>Electronics</option>
+      <option>Solar & Power</option>
+      <option>Home Appliances</option>
+      <option>Computers</option>
+      <option>Phones & Tablets</option>
+      <option>Fashion</option>
+      <option>Other</option>
+    </select>
+    <label>WhatsApp number</label>
+    <input type="text" placeholder="e.g. 080XXXXXXXX">
+    <label>Message (optional)</label>
+    <textarea placeholder="Tell us more about your products, stock, delivery location..."></textarea>
+    <div class="field-error" id="sellFormError"></div>
+    <button class="submit-btn" onclick="startSellerChat()">Start chat with our team</button>
+    <div class="note">This opens a conversation on WhatsApp — no account access is shared here.</div>
+  </div>
+</div>
+
+<script>
+  function openSellModal(){ document.getElementById('sellModal').classList.add('open'); }
+  function closeSellModal(){ document.getElementById('sellModal').classList.remove('open'); }
+  function startSellerChat(){
+    const name = document.querySelector('.modal input[placeholder^="e.g. Adeyemi"]').value.trim();
+    const category = document.querySelector('.modal select').value;
+    const phone = document.querySelector('.modal input[placeholder^="e.g. 080"]').value.trim();
+    const message = document.querySelector('.modal textarea').value.trim();
+    const err = document.getElementById('sellFormError');
+
+    if (!name || !phone) {
+      err.style.display = 'block';
+      err.textContent = 'Please add your business name and WhatsApp number so our team can reach you.';
+      return;
+    }
+    err.style.display = 'none';
+
+    let text = `Hi, I'd like to sell on Holuwafemi Mega Store.\nBusiness: ${name}\nCategory: ${category}\nMy WhatsApp: ${phone}\n${message ? 'Message: ' + message : ''}`;
+    const sellerSupportNumber = '2349159740200';
+    const url = `https://wa.me/${sellerSupportNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    closeSellModal();
+  }
+
+  // Search: in production this queries Firestore; here it routes to the shop page
+  function doSearch(){
+    const term = document.getElementById('searchInput').value.trim();
+    window.location.href = 'shop.html' + (term ? ('?q=' + encodeURIComponent(term)) : '');
+  }
+</script>
+</body>
+</html>
