@@ -173,7 +173,8 @@
 
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const params = new URLSearchParams(window.location.search);
   const preOrder = params.get('order');
@@ -193,43 +194,59 @@
     delivered: 'Delivered'
   };
 
+  // Tracking requires being logged in as the account that placed the order —
+  // this matches the Firestore rule (orders are only readable by their own
+  // userId), and checkout already requires login before an order is created.
+  let loggedInUser = null;
+  if (isConfigured()) {
+    const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      loggedInUser = user;
+    });
+  }
+
   window.lookupOrder = async function lookupOrder(){
-    const orderId = document.getElementById('orderNumInput').value.trim();
-    const phoneEntered = document.querySelector('.auth-wrap input[type="text"]:nth-of-type(2)')?.value.trim();
-    if (!orderId) { alert('Please enter your order number.'); return; }
+    let orderNumber = document.getElementById('orderNumInput').value.trim();
+    if (!orderNumber) { alert('Please enter your order number.'); return; }
+    if (!orderNumber.toUpperCase().startsWith('HMS-')) orderNumber = 'HMS-' + orderNumber.replace(/\D/g, '');
 
     if (!isConfigured()) {
-      // Demo fallback so the page still shows something before Firebase is connected.
-      document.getElementById('resOrderNum').textContent = orderId;
+      document.getElementById('resOrderNum').textContent = orderNumber;
       document.getElementById('orderResult').style.display = 'block';
       return;
     }
 
+    if (!loggedInUser) {
+      window.location.href = 'login.html?redirect=' + encodeURIComponent('track-order.html?order=' + orderNumber);
+      return;
+    }
+
     try {
-      const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+      const app = getApps()[0];
       const db = getFirestore(app);
-      const snap = await getDoc(doc(db, 'orders', orderId));
+      // Both filters are required together — this is what satisfies the
+      // Firestore rule that only lets you read your own orders.
+      const q = query(
+        collection(db, 'orders'),
+        where('orderNumber', '==', orderNumber),
+        where('userId', '==', loggedInUser.uid)
+      );
+      const snap = await getDocs(q);
 
-      if (!snap.exists()) {
-        alert('No order found with that order number. Double check it and try again.');
+      if (snap.empty) {
+        alert('No order found with that order number on your account. Double check it and try again.');
         return;
       }
-      const o = snap.data();
+      const o = snap.docs[0].data();
 
-      // Basic verification — the phone used at checkout must match what's entered here,
-      // so someone can't look up an order just by guessing/incrementing an ID.
-      if (phoneEntered && o.phone && phoneEntered !== o.phone) {
-        alert('That phone number does not match this order.');
-        return;
-      }
-
-      document.getElementById('resOrderNum').textContent = '#' + orderId.slice(-8).toUpperCase();
+      document.getElementById('resOrderNum').textContent = '#' + o.orderNumber;
       document.querySelector('#orderResult .row:nth-child(2) span:last-child').textContent = STATUS_LABELS[o.status] || o.status;
       document.querySelector('#orderResult .row:nth-child(4) span:last-child').textContent = '₦' + Number(o.total).toLocaleString('en-NG');
       document.getElementById('orderResult').style.display = 'block';
     } catch (err) {
       console.error(err);
-      alert('Could not look up that order right now. Please try again shortly.');
+      alert('Could not look up that order right now: ' + (err.message || err));
     }
   };
 
