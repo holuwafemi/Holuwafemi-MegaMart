@@ -95,11 +95,13 @@
     <div class="co-summary">
       <div class="summary-card">
         <h3>Order Summary</h3>
-        <div class="summary-row"><span>1000VA Solar Inverter Combo</span><span>₦185,000</span></div>
-        <div class="summary-row"><span>Tecno Spark 20</span><span>₦148,500</span></div>
-        <div class="summary-row"><span>Leather Laptop Bag</span><span>₦34,500</span></div>
-        <div class="summary-row"><span>Delivery</span><span>₦3,500</span></div>
-        <div class="summary-row total"><span>Total</span><span>₦371,500</span></div>
+        <div id="coItemsList">
+          <div class="summary-row"><span>1000VA Solar Inverter Combo</span><span>₦185,000</span></div>
+          <div class="summary-row"><span>Tecno Spark 20</span><span>₦148,500</span></div>
+          <div class="summary-row"><span>Leather Laptop Bag</span><span>₦34,500</span></div>
+        </div>
+        <div class="summary-row"><span>Delivery</span><span id="coDeliveryFee">₦3,500</span></div>
+        <div class="summary-row total"><span>Total</span><span id="coTotal">₦371,500</span></div>
         <button class="co-place-btn" onclick="placeOrder()">Place Order</button>
         <div class="secure-note">🔒 Payments secured by Paystack</div>
       </div>
@@ -203,7 +205,7 @@
 
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 
   document.querySelectorAll('.pay-option').forEach(opt => {
@@ -218,14 +220,68 @@
   // client-side. NEVER put your secret key (sk_...) here — keep it only in your
   // Firebase Cloud Function / Secrets Manager, same as your refund flow.
   const PAYSTACK_PUBLIC_KEY = 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475';
-  const ORDER_TOTAL_NAIRA = 371500; // ⚠️ demo total — real checkout should compute this from actual cart contents
-  const ORDER_TOTAL_KOBO = ORDER_TOTAL_NAIRA * 100;
+  const DELIVERY_FEE = 3500;
 
   function isConfigured(){
     return window.__firebaseConfig && window.__firebaseConfig.apiKey !== "REPLACE_ME";
   }
+  function formatN(n){ return '₦' + Number(n).toLocaleString('en-NG'); }
+  function db(){
+    const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfig);
+    return getFirestore(app);
+  }
+
+  // The real cart, loaded from Firestore for this logged-in user. This — not a
+  // fixed number — is what determines both what's shown and what Paystack charges.
+  let cartItems = [];
+  let cartTotal = 0;
+
+  function renderSummary(){
+    const list = document.getElementById('coItemsList');
+    if (cartItems.length === 0) {
+      list.innerHTML = `<div class="summary-row"><span>Your cart is empty</span><span></span></div>`;
+      document.getElementById('coDeliveryFee').textContent = formatN(0);
+      document.getElementById('coTotal').textContent = formatN(0);
+      cartTotal = 0;
+      return;
+    }
+    list.innerHTML = cartItems.map(item =>
+      `<div class="summary-row"><span>${item.name} ${item.qty > 1 ? '× ' + item.qty : ''}</span><span>${formatN(item.price * item.qty)}</span></div>`
+    ).join('');
+    const subtotal = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+    cartTotal = subtotal + DELIVERY_FEE;
+    document.getElementById('coDeliveryFee').textContent = formatN(DELIVERY_FEE);
+    document.getElementById('coTotal').textContent = formatN(cartTotal);
+  }
+
+  document.addEventListener('authReady', async (e) => {
+    if (!isConfigured() || !e.detail.user) {
+      // Not logged in / not configured — checkout shouldn't proceed with a real charge
+      // in this state; the demo line items stay visible for preview purposes only.
+      return;
+    }
+    try {
+      const snap = await getDoc(doc(db(), 'carts', e.detail.user.uid));
+      cartItems = (snap.exists() && snap.data().items) ? snap.data().items : [];
+    } catch (err) {
+      console.error('Could not load cart for checkout:', err);
+      cartItems = [];
+    }
+    renderSummary();
+  });
 
   window.placeOrder = async function placeOrder(){
+   try {
+    if (isConfigured() && !window.__currentUser) {
+      window.location = 'login.html?redirect=checkout.html';
+      return;
+    }
+    if (cartItems.length === 0) {
+      alert('Your cart is empty — add something before checking out.');
+      window.location = 'shop.html';
+      return;
+    }
+
     const payMethod = document.querySelector('input[name="pay"]:checked');
     const isPayOnDelivery = payMethod && payMethod.closest('.pay-option').textContent.includes('Pay on Delivery');
     const email = document.getElementById('coEmail').value.trim()
@@ -233,8 +289,15 @@
 
     const btn = document.querySelector('.co-place-btn');
 
+    // A real, short, human-typeable order number — separate from the long
+    // Firestore document ID. This is what customers see and type into
+    // Track Order, so it has to actually be stored and queryable.
+    const orderNumber = 'HMS-' + Math.floor(100000 + Math.random() * 900000);
+
     const orderData = {
-      total: ORDER_TOTAL_NAIRA,
+      orderNumber,
+      total: cartTotal, // ← real total computed from the actual cart, not a fixed number
+      items: cartItems,
       email: email || null,
       name: document.getElementById('coName').value.trim() || null,
       phone: document.getElementById('coPhone').value.trim() || null,
@@ -255,22 +318,36 @@
         orderRef = await addDoc(collection(db, 'orders'), orderData);
       } catch (err) {
         console.error('Could not create order:', err);
-        alert('Something went wrong creating your order. Please try again.');
+        alert('Could not create your order: ' + (err.code || '') + ' ' + (err.message || err));
         return;
       }
     }
 
+    async function clearCart(){
+      if (!isConfigured() || !window.__currentUser) return;
+      try { await deleteDoc(doc(db(), 'carts', window.__currentUser.uid)); }
+      catch (err) { console.error('Could not clear cart:', err); }
+    }
+
     if (isPayOnDelivery) {
+      await clearCart();
       window.location = 'order-confirmation.html' + (orderRef ? ('?order=' + orderRef.id) : '');
       return;
     }
 
     if (!email) { alert('An email is required for card/transfer payment.'); return; }
 
+    // If Paystack's script failed to load (blocked by network, ad-blocker, etc.),
+    // PaystackPop won't exist — this is exactly the "nothing happens" symptom.
+    if (typeof PaystackPop === 'undefined') {
+      alert('Payment system could not load (PaystackPop is undefined). This usually means js.paystack.co was blocked — check your connection or try disabling any ad-blocker/privacy extension, then reload the page.');
+      return;
+    }
+
     const handler = PaystackPop.setup({
       key: PAYSTACK_PUBLIC_KEY,
       email: email,
-      amount: ORDER_TOTAL_KOBO,
+      amount: Math.round(cartTotal * 100), // real total, in kobo
       currency: 'NGN',
       ref: 'HMS-' + Date.now(),
       callback: async function(response){
@@ -292,6 +369,7 @@
           }
         }
 
+        await clearCart();
         window.location = 'order-confirmation.html?ref=' + response.reference + (orderRef ? ('&order=' + orderRef.id) : '');
       },
       onClose: function(){
@@ -299,6 +377,11 @@
       }
     });
     handler.openIframe();
+
+   } catch (err) {
+     console.error('placeOrder failed:', err);
+     alert('Something went wrong: ' + (err.code || '') + ' ' + (err.message || err));
+   }
   };
 </script>
 </body>
